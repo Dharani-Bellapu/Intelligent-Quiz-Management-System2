@@ -1,0 +1,548 @@
+body {
+    background: linear-gradient(135deg, #1a1f36 0%, #2d3250 50%, #111628 100%) !important;
+    color: #f5f5f5;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.hero-section {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: radial-gradient(circle at center, rgba(108,99,255,0.08), transparent 70%);
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #6C63FF, #00C9FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(108, 99, 255, 0.4);
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    color: #cfcfcf;
+    max-width: 600px;
+}
+
+.btn-glow {
+    box-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(108, 99, 255, 0.8);
+}
+
+.features {
+    margin-top: 100px;
+}
+
+.feature-card {
+    background-color: #20263a;
+    border: 1px solid #30364a;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    color: #fff;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    background-color: #262d45;
+    box-shadow: 0 0 20px rgba(108, 99, 255, 0.4);
+}
+
+.feature-icon {
+    font-size: 40px;
+    color: #6C63FF;
+    margin-bottom: 15px;
+}
+
+.navbar, .footer {
+    background: linear-gradient(90deg, #23263a 0%, #323657 100%);
+    color: #fff;
+}
+
+.navbar-brand, .footer a, .footer {
+    color: #6C63FF !important;
+    font-weight: 600;
+    text-shadow: 0 0 8px #6C63FF55;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #6C63FF, #00C9FF);
+    border: none;
+    color: #fff;
+}
+
+.btn-outline-light {
+    border-color: #6C63FF;
+    color: #6C63FF;
+}
+
+.btn-outline-light:hover {
+    background: #6C63FF;
+    color: #fff;
+}
+.hero-section {
+    min-height: 55vh;                /* reduced height */
+    padding: 48px 0 12px 0;          /* tighter vertical space */
+}
+.features {
+    margin-top: 34px;                /* less gap above cards */
+    margin-bottom: 32px;             /* less gap below cards */
+}
+.feature-card {
+    padding: 20px 10px 10px 10px;    /* slightly tighter card spacing */
+}
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 40vh;
+        padding: 28px 0 10px 0;
+    }
+    .features {
+        margin-top: 22px;
+    }
+}
+.form-control {
+    background: #23263a !important;
+    color: #f5f5f5;
+    border: 1.5px solid #30364a !important;
+    border-radius: 8px;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    box-shadow: 0 0 0px #6c63ff60;
+}
+
+.form-control:focus {
+    color: #fff;
+    background: #23263a;
+    border-color: #6C63FF !important;
+    box-shadow: 0 0 8px #6C63FF80;
+}
+
+.form-label {
+    color: #dbeafe;
+    font-weight: 500;
+    padding-left: 2px;
+    text-shadow: 0 0 2px #23263a90;
+}
+
+.form-check-label {
+    color: #fff !important;
+}
+
+
+.card {
+    border: 1.5px solid #30364a;
+}
+
+.form-control {
+    background: #23263a !important;
+    color: #f5f5f5;
+    border: 1.5px solid #30364a !important;
+    border-radius: 8px;
+    box-shadow: 0 0 0px #6c63ff40;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    border-color: #6C63FF !important;
+    box-shadow: 0 0 8px #6C63FF80;
+    color: #fff;
+    background: #23263a;
+}
+
+.form-control,
+input[type="email"] {
+    background: #23263a !important;
+    color: #f5f5f5;
+    border: 1.5px solid #30364a !important;
+    border-radius: 8px;
+    box-shadow: 0 0 0px #6c63ff40;
+    font-size: 1rem;
+    padding: 12px 16px;
+    width: 100%;   /* Ensures it fills the card/container */
+    max-width: 380px; /* Adjust if you want a limit */
+}
+
+.form-control:focus,
+input[type="email"]:focus {
+    border-color: #6C63FF !important;
+    box-shadow: 0 0 8px #6C63FF80;
+    color: #fff;
+    background: #23263a;
+}
+.alert-success {
+    background: linear-gradient(90deg, #6C63FF, #00C9FF);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.alert-error, .alert-danger {
+    background: linear-gradient(90deg, #ff5e62, #ff9966);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+}
+.btn-close {
+    filter: brightness(0) invert(1); /* Makes close button white */
+}
+
+/* Success Message - Glowing Blue Gradient */
+.alert-success {
+    background: linear-gradient(90deg, #6C63FF, #00C9FF) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3) !important;
+}
+
+/* Error Message - Red Gradient */
+.alert-error, .alert-danger {
+    background: linear-gradient(90deg, #ff5e62, #ff9966) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(255, 94, 98, 0.3) !important;
+}
+
+/* Info Message - Light Blue */
+.alert-info {
+    background: linear-gradient(90deg, #4facfe, #00f2fe) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3) !important;
+}
+
+/* Warning Message - Orange */
+.alert-warning {
+    background: linear-gradient(90deg, #f093fb, #f5576c) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3) !important;
+}
+
+/* Close Button - White */
+.alert .btn-close {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+.alert .btn-close:hover {
+    opacity: 1;
+}
+
+/* Form input styling to match theme */
+.edit-form input[type="text"],
+.edit-form input[type="email"],
+.edit-form input[type="file"],
+.edit-form select,
+.edit-form textarea {
+    background: #1E2532 !important;
+    color: #E6E6E6 !important;
+    border: 1.5px solid #3A4150 !important;
+    border-radius: 8px;
+    padding: 12px 16px;
+    width: 100%;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.edit-form input[type="text"]:focus,
+.edit-form input[type="email"]:focus,
+.edit-form input[type="file"]:focus,
+.edit-form select:focus,
+.edit-form textarea:focus {
+    border-color: #6C63FF !important;
+    box-shadow: 0 0 8px rgba(108, 99, 255, 0.4);
+    outline: none;
+    background: #212838 !important;
+}
+
+/* Label styling */
+.edit-form label,
+.edit-form .form-label {
+    color: #A8ACB5;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* File input specific styling */
+.edit-form input[type="file"] {
+    padding: 10px 12px;
+    cursor: pointer;
+}
+
+.edit-form input[type="file"]::file-selector-button {
+    background: linear-gradient(90deg, #6C63FF, #8F85FF);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 12px;
+    transition: 0.3s;
+}
+
+.edit-form input[type="file"]::file-selector-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(108, 99, 255, 0.4);
+}
+
+/* Enhanced Navbar Styling */
+.navbar {
+    background: linear-gradient(90deg, #1a1f36 0%, #2d3250 100%);
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #6C63FF, #00C9FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.nav-link {
+    color: #E6E6E6 !important;
+    font-weight: 500;
+    padding: 8px 16px !important;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin: 0 4px;
+    font-size: 0.95rem;
+}
+
+.nav-link:hover {
+    background: rgba(108, 99, 255, 0.2);
+    color: #6C63FF !important;
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    background: linear-gradient(90deg, #6C63FF, #8F85FF);
+    color: #fff !important;
+    box-shadow: 0 0 10px rgba(108, 99, 255, 0.4);
+}
+
+/* Navbar toggler for mobile */
+.navbar-toggler {
+    border-color: rgba(108, 99, 255, 0.5);
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.3);
+}
+/* Dropdown Menu Styling */
+.dropdown-menu {
+    background: #1E2532;
+    border: 1px solid #3A4150;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+}
+
+.dropdown-item {
+    color: #E6E6E6;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background: rgba(108, 99, 255, 0.2);
+    color: #6C63FF;
+}
+
+.dropdown-divider {
+    border-color: #3A4150;
+}
+
+/* Custom hamburger icon for user menu */
+.dropdown-toggle::after {
+    display: none;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Nav link icon styling */
+.nav-link svg, .dropdown-item svg {
+    vertical-align: middle;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover svg, .dropdown-item:hover svg {
+    color: #6C63FF;
+}
+
+.nav-link.active svg {
+    color: #fff;
+}
+
+/* User menu button styling */
+.user-menu-btn {
+    padding: 8px 12px !important;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.user-menu-btn:hover {
+    background: rgba(108, 99, 255, 0.2);
+}
+
+.user-menu-btn::after {
+    display: none;
+}
+/* Sidebar icon styling */
+.sidebar a svg {
+    vertical-align: middle;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover svg {
+    color: #fff;
+}
+
+.sidebar a.active svg {
+    color: #fff;
+}
+
+.logout-btn svg {
+    color: #fff;
+}
+/* Start Quiz Button - Glowing Effect */
+.btn-start-quiz {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 16px 40px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(90deg, #6C63FF, #00C9FF);
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 0 20px rgba(108, 99, 255, 0.5);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-start-quiz::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-start-quiz:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 30px rgba(108, 99, 255, 0.8), 0 0 60px rgba(0, 201, 255, 0.4);
+    color: #fff;
+}
+
+.btn-start-quiz:hover::before {
+    left: 100%;
+}
+
+.btn-start-quiz:active {
+    transform: translateY(-1px);
+}
+
+.categories-hero {
+    text-align: center;
+    margin: 40px 0 20px 0;
+    color: #E6E6E6;
+}
+
+.category-card {
+    background: #232646;
+    border-radius: 18px;
+    padding: 32px 18px 28px 18px;
+    text-align: center;
+    box-shadow: 0 0 25px 0 rgba(108, 99, 255, 0.08);
+    transition: box-shadow 0.2s, transform 0.2s;
+    color: #fff;
+    position: relative;
+    min-height: 300px;
+}
+.category-card:hover {
+    box-shadow: 0 0 40px 3px #6C63FF33, 0 4px 32px #00c9ff33;
+    transform: translateY(-5px) scale(1.03);
+}
+
+.category-icon {
+    font-size: 2.6rem;
+    margin-bottom: 14px;
+}
+.category-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 7px;
+    color: #b1beff;
+}
+.category-desc {
+    font-size: 1rem;
+    margin-bottom: 18px;
+    color: #b4b8ca;
+}
+.btn-category {
+    background: linear-gradient(90deg, #6C63FF, #00C9FF);
+    color: #fff !important;
+    border-radius: 33px;
+    padding: 9px 28px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 0 18px 0 rgba(108, 99, 255, 0.21);
+    border: none;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-category:hover {
+    background: linear-gradient(90deg, #8F85FF, #00F6DA);
+    box-shadow: 0 0 30px #6C63FF55;
+    color: #fff;
+}
+.subcategory-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 13px;
+    color: #bdcdfc;
+    font-size: 0.94rem;
+}
+.subcategory-list li::before {
+    content: "• ";
+    color: #6C63FF;
+}
+
+.category-card {
+    margin-bottom: 24px;
+}
