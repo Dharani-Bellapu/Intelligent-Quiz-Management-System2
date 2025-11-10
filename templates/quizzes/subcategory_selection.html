@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+body {
+    background: radial-gradient(ellipse at center, #2c2440 0%, #232046 100%);
+}
+.divider {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #6f42c1, #ecd9fc);
+    border-radius: 2px;
+    margin: 0.5rem auto 1.5rem auto;
+}
+.subcategory-card {
+    background: linear-gradient(135deg, #fff 60%, #ecd9fc 100%);
+    border: 2px solid transparent;
+    cursor: pointer;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px rgba(110,66,193,0.08);
+    transition: box-shadow 0.2s, border-color 0.2s, background 0.2s;
+    border-radius: 16px;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+}
+.subcategory-card.selected {
+    background: #ecd9fc;
+    border-color: #6f42c1;
+    box-shadow: 0 0 20px #c299fc;
+}
+.subcategory-card:hover {
+    background: #ecd9fc !important;
+    border-color: #6f42c1 !important;
+    box-shadow: 0 0 20px #c299fc;
+}
+
+.subcategory-card h5 {
+    color: #390e8f !important;
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+.subcategory-card p {
+    color: #303030 !important;
+    font-size: 0.98rem;
+    margin-bottom: 0;
+}
+.btn-secondary:hover {
+    background-color: #c299fc;
+    color: #fff;
+}
+label, select {
+    font-size: 1.07rem;
+}
+.form-select {
+    background: #241a3c;
+    color: #fff;
+    border: 1.5px solid #6f42c1;
+    border-radius: 8px;
+    transition: border 0.2s;
+}
+.form-select:focus {
+    border-color: #c299fc;
+    background: #1b1332;
+    color: #fff;
+}
+.btn-primary {
+    background: linear-gradient(90deg, #6f42c1, #9b72cf 90%);
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 2px 10px #6f42c1cc;
+}
+.btn-primary:disabled {
+    background: #aaa;
+    color: #333;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ✨ Loading Modal Styles */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-overlay.show {
+    display: flex;
+}
+
+.loading-modal {
+    background: linear-gradient(135deg, #2c2440 0%, #1b1332 100%);
+    border: 2px solid #6f42c1;
+    border-radius: 20px;
+    padding: 40px 50px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(111, 66, 193, 0.5);
+    animation: modalPop 0.3s ease-out;
+}
+
+@keyframes modalPop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #3c87ea;
+    border-top: 4px solid #ecd9fc;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #ecd9fc;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.loading-subtext {
+    color: #c299fc;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.loading-dots {
+    display: inline-block;
+}
+
+.loading-dots::after {
+    content: '.';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+</style>
+
+<div class="container-fluid" style="max-width: 1200px; margin: auto; min-height: 75vh; padding-bottom: 2rem;">
+    <a href="{% url 'categories' %}" class="btn btn-secondary mb-3">
+        ← Back to Categories
+    </a>
+    <div class="divider"></div>
+    <h2 class="mb-4" style="font-weight: bold;">Select Subcategory for "{{ category.name }}"</h2>
+    {% if error %}
+        <div class="alert alert-warning">{{ error }}</div>
+    {% endif %}
+    <form method="post" autocomplete="off" id="quiz-form">
+        {% csrf_token %}
+        <div class="row g-4 mb-4">
+            {% for sub in subcategories %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card subcategory-card subcat-{{ forloop.counter }}" 
+                     data-subcat="{{ sub.id }}" 
+                     onclick="selectSubcategory(this)">
+                    <div class="card-body">
+                        <h5>{{ sub.name }}</h5>
+                        <p>{{ sub.description }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <input type="hidden" name="subcategory" id="subcategory-input" required>
+        <div class="mb-3">
+            <label><span style="color:#fff;">Difficulty:</span></label>
+            <select name="difficulty" class="form-select" required>
+                <option value="easy" selected>Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label><span style="color:#fff;">Number of Questions:</span></label>
+            <select name="num_questions" class="form-select" required>
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" id="start-quiz-btn" disabled>Start Quiz</button>
+    </form>
+</div>
+
+<!-- ✨ Loading Modal -->
+<div class="loading-overlay" id="loading-overlay">
+    <div class="loading-modal">
+        <div class="loading-spinner"></div>
+        <h3 class="loading-text">Generating Your Quiz<span class="loading-dots"></span></h3>
+        <p class="loading-subtext">AI is creating personalized questions for you. This may take a moment.</p>
+    </div>
+</div>
+
+<script>
+function selectSubcategory(cardElem) {
+    document.querySelectorAll('.subcategory-card').forEach(card => card.classList.remove('selected'));
+    cardElem.classList.add('selected');
+    const subcatId = cardElem.getAttribute('data-subcat');
+    document.getElementById('subcategory-input').value = subcatId;
+    document.getElementById('start-quiz-btn').disabled = false;
+}
+
+window.onload = function() {
+    document.getElementById('start-quiz-btn').disabled = true;
+};
+
+// ✨ Show loading modal when form is submitted
+document.getElementById('quiz-form').addEventListener('submit', function(e) {
+    // Show loading overlay
+    document.getElementById('loading-overlay').classList.add('show');
+    
+    // Optional: Disable the submit button to prevent double submission
+    document.getElementById('start-quiz-btn').disabled = true;
+    document.getElementById('start-quiz-btn').textContent = 'Generating...';
+});
+</script>
+{% endblock %}

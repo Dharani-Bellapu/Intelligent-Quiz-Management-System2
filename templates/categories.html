@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block title %}Categories{% endblock %}
+{% block content %}
+<div class="categories-hero">
+    <h2>Choose a Quiz Category</h2>
+    <p>Select a category to challenge yourself or discover something new!</p>
+</div>
+<div class="row g-4 justify-content-center mt-4">
+    <!-- Academic -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'subcategory_selection' 1 %}" style="text-decoration:none;">
+            <div class="category-card text-center">
+                <img src="/media/categories/academic.png" alt="Academic"
+                     class="category-img mb-3"
+                     style="width:200px; height:200px; object-fit:cover; border-radius:18px;">
+                <div class="category-name" style="font-size:2rem; font-weight:600;">Academic</div>
+                <div class="category-desc" style="font-size:1.1rem; margin-top:8px;">
+                    Test your knowledge in core academic areas.
+                </div>
+            </div>
+        </a>
+    </div>
+    <!-- Science & Tech -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'subcategory_selection' 2 %}" style="text-decoration:none;">
+            <div class="category-card text-center">
+                <img src="/media/categories/science&tech.png" alt="Science & Tech"
+                     class="category-img mb-3"
+                     style="width:200px; height:200px; object-fit:cover; border-radius:18px;">
+                <div class="category-name" style="font-size:2rem; font-weight:600;">Science & Tech</div>
+                <div class="category-desc" style="font-size:1.1rem; margin-top:8px;">
+                    Explore science, innovation, and technology trends.
+                </div>
+            </div>
+        </a>
+    </div>
+    <!-- General Knowledge -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'subcategory_selection' 3 %}" style="text-decoration:none;">
+            <div class="category-card text-center">
+                <img src="/media/categories/general_knowledge.png" alt="General Knowledge"
+                     class="category-img mb-3"
+                     style="width:200px; height:200px; object-fit:cover; border-radius:18px;">
+                <div class="category-name" style="font-size:2rem; font-weight:600;">General Knowledge</div>
+                <div class="category-desc" style="font-size:1.1rem; margin-top:8px;">
+                    Broad trivia and fun facts from around the world.
+                </div>
+            </div>
+        </a>
+    </div>
+    <!-- Entertainment -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'subcategory_selection' 4 %}" style="text-decoration:none;">
+            <div class="category-card text-center">
+                <img src="/media/categories/entertainment.png" alt="Entertainment"
+                     class="category-img mb-3"
+                     style="width:200px; height:200px; object-fit:cover; border-radius:18px;">
+                <div class="category-name" style="font-size:2rem; font-weight:600;">Entertainment</div>
+                <div class="category-desc" style="font-size:1.1rem; margin-top:8px;">
+                    Movies, music, and pop culture from around the globe.
+                </div>
+            </div>
+        </a>
+    </div>
+    <!-- Sports & Games -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'subcategory_selection' 5 %}" style="text-decoration:none;">
+            <div class="category-card text-center">
+                <img src="/media/categories/sports&games.png" alt="Sports & Games"
+                     class="category-img mb-3"
+                     style="width:200px; height:200px; object-fit:cover; border-radius:18px;">
+                <div class="category-name" style="font-size:2rem; font-weight:600;">Sports & Games</div>
+                <div class="category-desc" style="font-size:1.1rem; margin-top:8px;">
+                    Show your skills in sports, board games, and e-sports.
+                </div>
+            </div>
+        </a>
+    </div>
+    <!-- Literature & Art -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'subcategory_selection' 6 %}" style="text-decoration:none;">
+            <div class="category-card text-center">
+                <img src="/media/categories/art&literature.png" alt="Literature & Art"
+                     class="category-img mb-3"
+                     style="width:200px; height:200px; object-fit:cover; border-radius:18px;">
+                <div class="category-name" style="font-size:2rem; font-weight:600;">Literature & Art</div>
+                <div class="category-desc" style="font-size:1.1rem; margin-top:8px;">
+                    Dive into creativity and classical works across the ages.
+                </div>
+            </div>
+        </a>
+    </div>
+    <!-- Technology -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'subcategory_selection' 10 %}" style="text-decoration:none;">
+            <div class="category-card text-center">
+                <img src="/media/categories/technology.png" alt="Technology"
+                     class="category-img mb-3"
+                     style="width:200px; height:200px; object-fit:cover; border-radius:18px;">
+                <div class="category-name" style="font-size:2rem; font-weight:600;">Technology</div>
+                <div class="category-desc" style="font-size:1.1rem; margin-top:8px;">
+                    Stay updated with the latest in tech and software.
+                </div>
+            </div>
+        </a>
+    </div>
+    <!-- Food & Health -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'subcategory_selection' 7 %}" style="text-decoration:none;">
+            <div class="category-card text-center">
+                <img src="/media/categories/food&health.png" alt="Food & Health"
+                     class="category-img mb-3"
+                     style="width:200px; height:200px; object-fit:cover; border-radius:18px;">
+                <div class="category-name" style="font-size:2rem; font-weight:600;">Food & Health</div>
+                <div class="category-desc" style="font-size:1.1rem; margin-top:8px;">
+                    Test your knowledge on cuisines, nutrition, and health.
+                </div>
+            </div>
+        </a>
+    </div>
+    <!-- Space & Astronomy -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'subcategory_selection' 8 %}" style="text-decoration:none;">
+            <div class="category-card text-center">
+                <img src="/media/categories/space&astronomy.png" alt="Space & Astronomy"
+                     class="category-img mb-3"
+                     style="width:200px; height:200px; object-fit:cover; border-radius:18px;">
+                <div class="category-name" style="font-size:2rem; font-weight:600;">Space & Astronomy</div>
+                <div class="category-desc" style="font-size:1.1rem; margin-top:8px;">
+                    Journey through the cosmos and discovery.
+                </div>
+            </div>
+        </a>
+    </div>
+    <!-- Culture & Heritage -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'subcategory_selection' 9 %}" style="text-decoration:none;">
+            <div class="category-card text-center">
+                <img src="/media/categories/culture&heritage.png" alt="Culture & Heritage"
+                     class="category-img mb-3"
+                     style="width:200px; height:200px; object-fit:cover; border-radius:18px;">
+                <div class="category-name" style="font-size:2rem; font-weight:600;">Culture & Heritage</div>
+                <div class="category-desc" style="font-size:1.1rem; margin-top:8px;">
+                    Discover customs, festivals, languages, and arts.
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}

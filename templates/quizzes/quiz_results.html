@@ -1,0 +1,300 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Results</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{% static 'your-path-to-main-theme.css' %}"><!-- link your common CSS here if needed -->
+  <style>
+    body {
+      background: linear-gradient(135deg, #1a1f36 0%, #2d3250 50%, #111628 100%) !important;
+      color: #f5f5f5;
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin:0; min-height:100vh;
+    }
+    .results-container {
+      width:100vw;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 60px;
+    }
+
+    .result-card {
+  background: linear-gradient(120deg, #232646 80%, #262d45 100%);
+  border-radius: 28px;
+  box-shadow: 0 14px 48px 0 rgba(70,110,255,0.19), 0 2px 0px #6C63FF22;
+  padding: 58px 54px 34px 54px;
+  margin: 0 0 28px 0;
+  width: 660px;
+  max-width: 97vw;
+  text-align: center;
+  transition: width 0.23s;
+}
+
+@media (max-width:1000px){
+  .result-card { width: 94vw; padding: 7vw 4vw 24px 4vw;}
+}
+    .result-card h2 {
+      font-size: 2.1rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #6C63FF, #00C9FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 14px;
+      text-shadow: 0 0 10px rgba(108, 99, 255, 0.30);
+    }
+    .score-main {
+      font-size: 4em;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 18px #6C63FF66;
+    }
+    .score-detail {
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.15em;
+      margin-bottom: 18px;
+      letter-spacing:.01em;
+    }
+    .btn-theme {
+      background: linear-gradient(90deg, #6C63FF, #00C9FF);
+      color: #fff !important;
+      border-radius: 16px;
+      padding: 13px 34px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 0 18px 0 rgba(108, 99, 255, 0.20);
+      border: none;
+      transition: all 0.22s;
+      outline: none;
+      margin:0 12px;
+      font-size:1.15em;
+      cursor:pointer;
+      display:inline-block;
+    }
+    .btn-theme:hover {
+      background: linear-gradient(90deg, #8F85FF, #00F6DA);
+      box-shadow: 0 0 30px #6C63FF77;
+      color: #eef;
+    }
+
+    .btn-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 22px 0 7px 0;
+}
+
+.btn-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;                /* More desktop spacing */
+  margin: 28px 0 7px 0;
+}
+
+@media (max-width: 700px) {
+  .btn-row {
+    gap: 13px;              /* Tighter gap on mobile/tablet */
+    flex-wrap: wrap;        /* Stack if needed */
+  }
+}
+
+.btn-theme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;                  /* space for icon */
+  box-shadow: 0 0 12px 0 rgba(108,99,255,0.18),
+              0 0 0 0 #00c9ff;
+  transition: box-shadow 0.3s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-theme:hover, .btn-theme:focus {
+  box-shadow: 0 0 22px 4px #6C63FF88,
+              0 0 40px #00c9ff48;
+  transform: scale(1.045);
+  z-index:1;
+}
+
+/* Icon style to blend with the theme */
+.btn-theme svg {
+  font-size: 1.17em;
+  color: #fff;
+  filter: drop-shadow(0px 1.5px 8px #6C63FF55);
+  transition: color .2s, filter .18s;
+  margin-right: 4px;
+}
+
+/* On hover for extra interactivity */
+.btn-theme:hover svg {
+  color: #00c9ff;
+  filter: drop-shadow(0px 2px 18px #00c9ff77);
+}
+
+    .review-section {
+      background: rgba(34, 39, 49, 0.97);
+      border-radius: 20px;
+      box-shadow: 0 6px 32px rgba(45, 60, 110, 0.13);
+      margin-top: 27px;
+      padding: 26px 25px 13px 25px;
+      width: 440px;
+      max-width: 96vw;
+      text-align: left;
+      display:none;
+      animation: fadeInR .44s cubic-bezier(.53,1.2,0,1) both;
+    }
+    @keyframes fadeInR {from{opacity:0;transform:scale(.96);} to{opacity:1;transform:scale(1);}}
+    .review-section.open {display:block;}
+    .review-section h3 {
+      color: #aebfff;
+      font-weight: 700;
+      margin-bottom:15px;
+      font-size:1.13em;
+      letter-spacing:.02em;
+    }
+    .qa-card {
+      background: #20263a;
+      border: 1.5px solid #30364a;
+      border-radius: 14px;
+      padding: 14px 14px 9px 14px;
+      color: #fff;
+      margin-bottom: 15px;
+      box-shadow: 0 1px 12px #6C63FF13;
+      position: relative;
+      font-size:1.03em;
+    }
+    .qa-card.correct { border-color: #5ae8b9; }
+    .qa-card.incorrect { border-color: #ff4873b7; }
+    .qa-question {
+      font-weight:700;
+      font-size:1em;
+      color:#dbdeff;
+      margin-bottom:4px;
+    }
+    .qa-your {
+      font-size:.97em; color:#ffc8fe;font-weight:600;margin-left:5px;
+    }
+    .qa-correct {
+      color: #91ffee; font-weight:600; font-size:.98em;margin-top:1px;
+    }
+    .qa-noans {color:#ff681c;}
+    .qa-icon {
+      font-size:1em;font-weight:800;margin-left:7px;vertical-align:middle;
+    }
+    .qa-card.correct .qa-icon { color:#2dfa9c; }
+    .qa-card.incorrect .qa-icon { color:#ff4873; }
+    @media(max-width:600px){.result-card,.review-section{width:97vw!important;padding:0 3vw;}}
+
+    .encourage-msg {
+  margin-bottom: 22px;
+  font-size: 1.13em;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 2px 18px #6c63ff50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 32px;
+  letter-spacing: 0.02em;
+}
+
+.encourage-msg .emoji {
+  font-size: 1.6em;
+  vertical-align: -4px;
+}
+
+.retake-quiz-btn {
+  background: linear-gradient(90deg, #4336cf, #00bfff 90%);
+  box-shadow: 0 0 18px 0 rgba(0, 191, 255, 0.20);
+}
+
+.retake-quiz-btn:hover, .retake-quiz-btn:focus {
+  background: linear-gradient(90deg, #786fff, #36e8fd 95%);
+  box-shadow: 0 0 26px #00c9ff70, 0 0 30px #4336cf44;
+  color: #fff;
+}
+  
+  
+  
+  </style>
+</head>
+<body>
+  <div class="results-container">
+    <div class="result-card">
+      <h2>Quiz Completed!</h2>
+      <span class="score-main">{{ attempt.score_percentage|default:'0'|floatformat:1 }}<span style="font-size:.43em;font-weight:400;">%</span></span>
+      <div class="score-detail">
+  {{ correct_count }} out of {{ total_questions }} correct
+</div>
+
+{# Encouragement Message Block #}
+{% with percentage=attempt.score_percentage|default:0 %}
+  <div class="encourage-msg">
+    {% if percentage >= 90 %}
+      <span class="emoji">🎉</span> Fantastic! You're a quiz master!
+    {% elif percentage >= 75 %}
+      <span class="emoji">👏</span> Great work! Keep it up.
+    {% elif percentage >= 50 %}
+      <span class="emoji">🙂</span> Good effort—review and try to improve!
+    {% elif percentage > 0 %}
+      <span class="emoji">💡</span> Don't give up. Review and retake the quiz!
+    {% else %}
+      <span class="emoji">📝</span> Try answering a few more next time!
+    {% endif %}
+  </div>
+{% endwith %}
+
+
+      <div class="btn-row">
+  <button class="btn-theme" id="toggle-review" onclick="toggleReview()">Review Your Answers</button>
+  <a href="{% url 'quiz_start' %}" class="btn-theme retake-quiz-btn">Retake Quiz</a>
+  <a href="{% url 'categories' %}" class="btn-theme">Back to Categories</a>
+</div>
+    </div>
+    <div id="reviewSection" class="review-section">
+      <h3>Review Your Answers</h3>
+      {% for ans in answers %}
+        <div class="qa-card {% if ans.is_correct %}correct{% else %}incorrect{% endif %}">
+          <div class="qa-question">
+            Q{{ forloop.counter }}: {{ ans.question.question_text }}
+            {% if ans.is_correct %}
+              <span class="qa-icon">✔</span>
+            {% else %}
+              <span class="qa-icon">✗</span>
+            {% endif %}
+          </div>
+          <div>
+            <span>Your answer:</span>
+            <span class="qa-your">{% if ans.user_answer %}{{ ans.user_answer }}{% else %}<span class="qa-noans">(No Answer)</span>{% endif %}</span>
+          </div>
+          {% if not ans.is_correct %}
+            <div class="qa-correct">Correct answer: {{ ans.question.answer }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <script>
+   function toggleReview() {
+      const sec = document.getElementById('reviewSection');
+      sec.classList.toggle('open');
+      const btn = document.getElementById('toggle-review');
+      btn.textContent = sec.classList.contains('open') ? "Hide Review" : "Review Your Answers";
+    }
+  </script>
+</body>
+</html>
