@@ -1,0 +1,501 @@
+{% extends 'base.html' %}
+{% block title %}Review Quiz{% endblock %}
+{% block content %}
+
+<!-- STICKY TOP BAR -->
+<header id="sticky-bar" class="d-flex align-items-center justify-content-between px-4 py-2"
+        style="position:sticky; top:0; z-index:1050; backdrop-filter: blur(6px);
+               background: linear-gradient(180deg, rgba(20,25,50,0.95), rgba(15,18,35,0.85));
+               border-bottom: 1px solid rgba(255,255,255,0.03);">
+    <div class="d-flex align-items-center gap-3">
+        <a href="{% url 'quiz_history' %}" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <div style="font-size:0.95rem; color:#cfe8ff; font-weight:700;">{{ attempt.category }} — {{ attempt.subcategory }}</div>
+            <div style="font-size:0.78rem; color:rgba(255,255,255,0.65);">Review your answers and learn</div>
+        </div>
+    </div>
+
+    <!-- SCORE + PROGRESS CIRCLE -->
+    <div class="d-flex align-items-center gap-3">
+        <div style="text-align:right; min-width:88px;">
+            <div style="font-size:0.82rem; color:#bfe9ff; font-weight:700;">Score</div>
+            <div style="font-size:1.05rem; color:#fff; font-weight:800;">{{ attempt.score_percentage }}%</div>
+        </div>
+
+        <div id="score-ring" style="width:64px; height:64px;">
+            <svg viewBox="0 0 36 36" class="circular-chart" style="transform: rotate(0deg); width:64px; height:64px;">
+                <path class="circle-bg"
+                      d="M18 2.0845
+                         a 15.9155 15.9155 0 0 1 0 31.831
+                         a 15.9155 15.9155 0 0 1 0 -31.831"
+                      fill="none" stroke="#273246" stroke-width="3.2"/>
+                <path id="circle-bar" class="circle"
+                      d="M18 2.0845
+                         a 15.9155 15.9155 0 0 1 0 31.831
+                         a 15.9155 15.9155 0 0 1 0 -31.831"
+                      fill="none" stroke="#4ecbff" stroke-width="3.2" stroke-linecap="round"
+                      stroke-dasharray="0,100"/>
+                <text id="circle-text" x="18" y="20.5" text-anchor="middle"
+                      style="font-size:6.2px; fill:#eaf6ff; font-weight:800;">0%</text>
+            </svg>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid" style="padding-top:1.5rem;">
+    <div class="row g-4">
+
+        <!-- NAV SIDEBAR -->
+        <aside id="question-sidebar" class="col-lg-3 d-none d-lg-block"
+               style="position:sticky; top:82px; height:calc(100vh - 110px); overflow:auto; padding-right:1rem;">
+            <div class="card p-3" style="background:rgba(18,22,40,0.86); border:1px solid rgba(255,255,255,0.03); border-radius:12px;">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="mb-0" style="color:#e6f8ff; font-weight:800;">Questions</h6>
+                    <small style="color:rgba(255,255,255,0.65); font-weight:700;">{{ questions|length }}</small>
+                </div>
+                <div id="sidebar-list" class="d-flex flex-column gap-2">
+                    {% for question in questions %}
+                    <button class="sidebar-item btn btn-sm text-start d-flex align-items-center gap-2"
+                            data-target="q-{{ question.id }}"
+                            style="justify-content:flex-start; background:transparent; border:1px solid rgba(255,255,255,0.03); color:#dbe9ff; padding:10px; border-radius:10px;">
+                        <span class="dot" style="width:12px; height:12px; border-radius:50%;
+                             {% if question.is_correct %}background:#2ecc71; box-shadow:0 0 8px rgba(46,204,113,0.16);{% else %}background:#ff6b6b; box-shadow:0 0 8px rgba(255,107,107,0.16);{% endif %}"></span>
+                        <small style="font-weight:700; color:#e8f7ff;">Q{{ forloop.counter }}</small>
+                        <small class="ms-auto" style="opacity:0.8; max-width: 120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ question.user_answer|truncatechars:18 }}</small>
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="col-lg-9 col-12">
+            <div class="row g-4">
+
+                {% for question in questions %}
+                <div class="col-12">
+                    <article id="q-{{ question.id }}" class="question-card card rounded-4 p-4"
+                             data-correct="{% if question.is_correct %}1{% else %}0{% endif %}"
+                             style="background: linear-gradient(180deg, rgba(20,26,50,0.78), rgba(13,16,32,0.78));
+                                    border:1px solid rgba(255,255,255,0.02);
+                                    color:#e9f6ff; overflow:visible;">
+                        <!-- Header -->
+                        <div class="d-flex align-items-start justify-content-between gap-3">
+                            <h5 class="mb-2 question-title" style="font-weight:800; font-size:1.05rem; line-height:1.3;">
+                                <span class="me-2" style="color:#92e6ff; font-weight:900;">Q{{ forloop.counter }}.</span>
+                                <span style="display:inline-block; max-width:70%; vertical-align:middle;">{{ question.text }}</span>
+                            </h5>
+
+                            <div class="text-end">
+                                {% if question.is_correct %}
+                                <div class="badge bg-success text-white px-3 py-2" style="font-weight:800;">Correct</div>
+                                {% else %}
+                                <div class="badge bg-danger text-white px-3 py-2" style="font-weight:800;">Wrong</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Answer area -->
+                        <div class="mt-2 mb-3 d-flex flex-column gap-2">
+                            <div class="d-flex align-items-center gap-3 flex-wrap">
+                                <div>
+                                    <small style="opacity:0.85; font-weight:700;">Your Answer</small>
+                                    <div class="mt-2">
+                                        <span class="answer-pill badge
+                                            {% if question.is_correct %}bg-success{% else %}bg-danger{% endif %}
+                                            px-3 py-2" style="font-weight:800; font-size:0.95rem;">{{ question.user_answer }}</span>
+                                        {% if not question.is_correct %}
+                                        <span class="badge bg-info text-dark px-3 py-2 ms-2" style="font-weight:700; font-size:0.95rem;">{{ question.correct_answer }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="ms-auto" style="min-width:180px; text-align:right;">
+                                    <small style="opacity:0.7;">Question {{ forloop.counter }} of {{ questions|length }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Explanation -->
+                        {% if not question.is_correct %}
+                        <div class="mt-2">
+                            <button class="exp-toggle btn btn-sm rounded-pill"
+                                    data-target="exp-{{ question.id }}"
+                                    aria-expanded="false"
+                                    style="background:transparent; border:1px solid rgba(78,203,255,0.14); color:#9fe8ff; padding:6px 12px;">
+                                <i class="bi bi-chevron-down"></i>
+                                <span class="ms-2">Show Explanation</span>
+                            </button>
+
+                            <div id="exp-{{ question.id }}" class="exp-box mt-3"
+                                 style="max-height:0; overflow:hidden; transition:max-height .42s cubic-bezier(.2,.9,.2,1), opacity .32s linear; opacity:0;">
+                                <div class="p-3 rounded-3" style="background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.006)); border-left:4px solid #4ecbff;">
+                                    <h6 style="color:#4ecbff; font-weight:800; margin-bottom:6px;">📘 AI Explanation</h6>
+                                    <p style="color:#d9ecff; margin-bottom:8px;">{{ question.explanation }}</p>
+
+                                    <div class="d-flex flex-wrap gap-2 mt-2 align-items-center">
+                                        {% if question.reference_link %}
+                                        <a href="{{ question.reference_link }}" target="_blank" class="btn btn-sm btn-outline-info rounded-pill px-3 py-1">
+                                            <i class="bi bi-link-45deg"></i> Reference
+                                        </a>
+                                        {% endif %}
+                                        {% if question.learning_source %}
+                                        <a href="{{ question.learning_source }}" target="_blank" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1">
+                                            <i class="bi bi-book"></i> Learn More
+                                        </a>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Emoji Reactions (rounded square buttons) -->
+                                    <div class="mt-3" style="border-top:1px dashed rgba(255,255,255,0.04); padding-top:12px;">
+                                        <small style="opacity:0.9; display:block; margin-bottom:8px; font-weight:700; color:#eaf6ff;">How did this explanation feel?</small>
+                                        <div class="d-flex gap-2 align-items-center">
+
+                                            <!-- Rounded square reaction buttons -->
+                                            <button class="reaction-btn btn btn-sm" data-type="insightful" data-id="{{ question.id }}" title="Insightful — I learned something" aria-pressed="false">✨</button>
+                                            <button class="reaction-btn btn btn-sm" data-type="clear" data-id="{{ question.id }}" title="Clear — explanation clarified my doubt" aria-pressed="false">✅</button>
+                                            <button class="reaction-btn btn btn-sm" data-type="confusing" data-id="{{ question.id }}" title="Confusing — explanation was unclear" aria-pressed="false">❓</button>
+                                            <button class="reaction-btn btn btn-sm" data-type="too-long" data-id="{{ question.id }}" title="Too long" aria-pressed="false">🧾</button>
+
+                                            <!-- old thumbs (kept for compatibility) -->
+                                            <button class="btn btn-sm feedback-btn ms-2" data-type="helpful" data-id="{{ question.id }}" id="helpful-btn-{{ question.id }}">👍</button>
+                                            <button class="btn btn-sm feedback-btn" data-type="not_helpful" data-id="{{ question.id }}" id="nothelpful-btn-{{ question.id }}">👎</button>
+
+                                            <input type="text" id="feedback-text-{{ question.id }}" class="feedback-box form-control form-control-sm ms-2"
+    placeholder="Add a short note (optional)"
+    style="max-width:380px; min-width:200px; background:rgba(82, 96, 138, 0.95); color:#fff; border:1.7px solid rgba(255,255,255,0.12); padding:10.5px 14px; border-radius:8px; font-size:1.1rem;"
+    onblur="setAddFeedbackPlaceholder(this)">
+                                            <button onclick="saveTextFeedback('{{ question.id }}')" class="btn btn-sm btn-info text-dark">Save</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </article>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- BOTTOM SUMMARY PANEL -->
+            <div id="summary-panel" class="card rounded-4 mt-4 p-3"
+                 style="background: linear-gradient(180deg, rgba(12,16,28,0.95), rgba(18,22,36,0.95)); border:1px solid rgba(255,255,255,0.03);">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div style="min-width:220px;">
+                        <h6 style="color:#e9f8ff; margin-bottom:0.25rem; font-weight:800;">Summary</h6>
+                        <small style="opacity:0.8; color:#cfeaff;">Quick overview of your attempt</small>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-4 ms-auto" style="flex:1; justify-content:flex-end;">
+                        <div class="text-center px-3">
+                            <div id="summary-total" style="font-weight:900; font-size:1.05rem; color:#f2f6ff;">0</div>
+                            <small style="opacity:0.75; color:#cfeaff;">Total</small>
+                        </div>
+                        <div class="text-center px-3">
+                            <div id="summary-correct" style="font-weight:900; font-size:1.05rem; color:#2ecc71;">0</div>
+                            <small style="opacity:0.75; color:#cfeaff;">Correct</small>
+                        </div>
+                        <div class="text-center px-3">
+                            <div id="summary-wrong" style="font-weight:900; font-size:1.05rem; color:#ff6b6b;">0</div>
+                            <small style="opacity:0.75; color:#cfeaff;">Wrong</small>
+                        </div>
+                        <div class="text-center px-3">
+    <div id="summary-time" style="font-weight:800; font-size:1rem; color:#cfe8ff;">{{ time_taken_str }}</div>
+    <small style="opacity:0.75; color:#cfeaff;">Time</small>
+</div>
+
+                        <a href="{% url 'quiz_history' %}" class="btn btn-outline-light btn-sm rounded-pill ms-2">
+    Back to history
+</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- FLOATING PREV / NEXT -->
+<div id="floating-nav" style="position:fixed; right:18px; bottom:60px; display:flex; flex-direction:column; gap:8px; z-index:1100;">
+    <button id="prev-btn" class="btn btn-lg rounded-circle" title="Previous" style="width:54px; height:54px; background:rgba(255,255,255,0.04); color:#fff; border:1px solid rgba(255,255,255,0.04);">
+        <i class="bi bi-chevron-up"></i>
+    </button>
+    <button id="next-btn" class="btn btn-lg rounded-circle" title="Next" style="width:54px; height:54px; background:rgba(255,255,255,0.04); color:#fff; border:1px solid rgba(255,255,255,0.04);">
+        <i class="bi bi-chevron-down"></i>
+    </button>
+</div>
+
+<!-- STYLES -->
+<style>
+
+.feedback-box::placeholder {
+    color: #e5e5ff !important;  /* Light color for visibility */
+    opacity: 1;
+}
+
+/* Card hover */
+.question-card { transition: transform .28s ease, box-shadow .28s ease; padding-bottom:18px; }
+.question-card:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(8,12,30,0.45); }
+
+/* success/error glow */
+.question-card[data-correct="1"] { box-shadow: 0 6px 30px rgba(46,204,113,0.06), inset 0 0 18px rgba(46,204,113,0.02); border-left:4px solid rgba(46,204,113,0.12); }
+.question-card[data-correct="0"] { box-shadow: 0 6px 30px rgba(255,107,107,0.06), inset 0 0 18px rgba(255,107,107,0.02); border-left:4px solid rgba(255,107,107,0.10); }
+
+/* sidebar items */
+.sidebar-item { text-align:left; padding:10px 12px; border-radius:10px; }
+.sidebar-item.active { background: linear-gradient(90deg, rgba(78,203,255,0.06), rgba(78,203,255,0.02)); transform:translateX(4px); }
+
+/* progress circle */
+.circular-chart { width:100%; height:100%; }
+.circle { transition: stroke-dasharray 0.8s ease; }
+
+/* reaction buttons: rounded square style */
+.reaction-btn {
+    width:44px;
+    height:44px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.04);
+    color:#fff;
+    font-size:18px;
+    transition: transform .12s ease, box-shadow .18s ease, background .18s ease;
+    cursor:pointer;
+}
+.reaction-btn:hover { transform: translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.4); }
+
+/* active glow states for each reaction type (customize colors) */
+.reaction-btn.active[data-type="insightful"] { background:linear-gradient(180deg,#fff3d9,#ffe5a7); color:#2b2b22; box-shadow:0 6px 28px rgba(255,200,60,0.18); border-color: rgba(255,200,60,0.3); }
+.reaction-btn.active[data-type="clear"] { background:linear-gradient(180deg,#dfffe6,#9ff6c6); color:#1f3b22; box-shadow:0 6px 28px rgba(80,220,130,0.18); border-color: rgba(80,220,130,0.25); }
+.reaction-btn.active[data-type="confusing"] { background:linear-gradient(180deg,#ffdfe8,#ffb3c4); color:#3b121f; box-shadow:0 6px 28px rgba(255,110,140,0.18); border-color: rgba(255,110,140,0.25); }
+.reaction-btn.active[data-type="too-long"] { background:linear-gradient(180deg,#e9f0ff,#c7dbff); color:#08204b; box-shadow:0 6px 28px rgba(60,120,255,0.12); border-color: rgba(60,120,255,0.25); }
+
+/* helpful / not helpful button states */
+.feedback-btn { padding:7px 12px; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.03); color:#fff; transition:box-shadow .18s ease, transform .12s ease; }
+.feedback-btn:hover { transform: translateY(-3px); box-shadow:0 6px 16px rgba(0,0,0,0.36); }
+.active-helpful { background:#c8f7c5 !important; border-color:#28a745 !important; color:#155724 !important; box-shadow:0 0 10px #28a745; }
+.active-nothelpful { background:#f7c5c5 !important; border-color:#dc3545 !important; color:#721c24 !important; box-shadow:0 0 10px #dc3545; }
+
+/* small screens adjustments */
+@media (max-width: 991px) {
+    #question-sidebar { display:none !important; }
+    #floating-nav { right:10px; bottom:16px; }
+    header#sticky-bar { padding-left:10px; padding-right:10px; }
+    .question-title span { display:block; max-width:100%; }
+}
+
+/* ensure summary numbers visible and aligned */
+#summary-panel { padding:16px; }
+#summary-panel .text-center { min-width:72px; }
+</style>
+
+<!-- SCRIPTS -->
+<script>
+/* Helper selectors */
+const sidebarButtons = document.querySelectorAll('.sidebar-item');
+const questionCards = Array.from(document.querySelectorAll('.question-card'));
+const expToggles = document.querySelectorAll('.exp-toggle');
+const nextBtn = document.getElementById('next-btn');
+const prevBtn = document.getElementById('prev-btn');
+const scorePercent = Number("{{ attempt.score_percentage }}") || 0;
+
+/* Progress circle */
+(function renderScoreCircle() {
+    const circle = document.getElementById('circle-bar');
+    const text = document.getElementById('circle-text');
+    const pct = Math.max(0, Math.min(100, scorePercent));
+    const dash = pct;
+    circle.setAttribute('stroke-dasharray', `${dash},100`);
+    text.textContent = `${pct}%`;
+})();
+
+/* Sidebar click -> scroll to question */
+sidebarButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const el = document.getElementById(targetId);
+        if (el) {
+            el.scrollIntoView({behavior:'smooth', block:'center'});
+            clearActiveSidebar();
+            btn.classList.add('active');
+            flashCard(el);
+        }
+    });
+});
+function clearActiveSidebar() { sidebarButtons.forEach(b => b.classList.remove('active')); }
+
+/* IntersectionObserver for animated fade/slide-in */
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.style.opacity = 1;
+            e.target.style.transform = 'translateY(0px)';
+            e.target.style.transition = 'opacity 0.6s ease, transform 0.6s cubic-bezier(.2,.9,.2,1)';
+            observer.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.16 });
+
+questionCards.forEach((card, idx) => {
+    card.style.opacity = 0;
+    card.style.transform = 'translateY(18px)';
+    observer.observe(card);
+    card.dataset.index = idx;
+});
+
+/* Smooth expand/collapse for explanation */
+expToggles.forEach(btn => {
+    btn.addEventListener('click', function () {
+        const target = document.getElementById(this.dataset.target);
+        if (!target) return;
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        if (!expanded) {
+            const full = target.scrollHeight + 20;
+            target.style.maxHeight = full + 'px';
+            target.style.opacity = 1;
+            this.setAttribute('aria-expanded', 'true');
+            this.innerHTML = '<i class="bi bi-chevron-up"></i> <span class="ms-2">Hide Explanation</span>';
+        } else {
+            target.style.maxHeight = '0';
+            target.style.opacity = 0;
+            this.setAttribute('aria-expanded', 'false');
+            this.innerHTML = '<i class="bi bi-chevron-down"></i> <span class="ms-2">Show Explanation</span>';
+        }
+    });
+});
+
+/* Floating Next / Prev logic */
+function getCurrentVisibleIndex() {
+    const mid = window.innerHeight / 2;
+    let nearestIdx = 0;
+    let nearestDist = Infinity;
+    questionCards.forEach((card, idx) => {
+        const rect = card.getBoundingClientRect();
+        const center = rect.top + rect.height/2;
+        const dist = Math.abs(center - mid);
+        if (dist < nearestDist) {
+            nearestDist = dist;
+            nearestIdx = idx;
+        }
+    });
+    return nearestIdx;
+}
+function scrollToIndex(idx) {
+    if (idx < 0) idx = 0;
+    if (idx >= questionCards.length) idx = questionCards.length - 1;
+    const el = questionCards[idx];
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // highlight corresponding sidebar item
+    const targetBtn = Array.from(sidebarButtons).find(b => b.getAttribute('data-target') === el.id);
+    clearActiveSidebar();
+    if (targetBtn) targetBtn.classList.add('active');
+    flashCard(el);
+}
+nextBtn.addEventListener('click', () => { const idx = getCurrentVisibleIndex(); scrollToIndex(idx + 1); });
+prevBtn.addEventListener('click', () => { const idx = getCurrentVisibleIndex(); scrollToIndex(idx - 1); });
+function flashCard(el) { el.style.transition = 'box-shadow .28s ease, transform .18s ease'; el.style.transform = 'translateY(-6px)'; setTimeout(()=> el.style.transform = 'translateY(0)', 280); }
+
+/* Reaction & feedback handlers: make reactions glow when clicked */
+document.querySelectorAll('.reaction-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const qid = this.getAttribute('data-id');
+        const type = this.getAttribute('data-type');
+
+        // Toggle active state locally for immediate feedback (single-select behavior)
+        // Remove active for other reaction buttons for same question
+        const parent = this.closest('.exp-box');
+        if (parent) {
+            parent.querySelectorAll('.reaction-btn').forEach(b => {
+                if (b !== this) b.classList.remove('active');
+            });
+        }
+        // Toggle this one
+        const isActive = this.classList.toggle('active');
+
+        // Optionally set aria-pressed
+        this.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+
+        // Send reaction to server (reuse submit_feedback endpoint)
+        fetch("{% url 'submit_feedback' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ question_id: qid, feedback_type: type })
+        }).then(r => r.json()).then(data => {
+            // subtle animation
+            this.style.transform = 'scale(1.06)';
+            setTimeout(()=> this.style.transform = '', 180);
+        }).catch(()=>{ /* ignore network errors silently */ });
+    });
+});
+
+/* keep old helpful/not_helpful buttons working and show glow */
+document.querySelectorAll('.feedback-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const qid = this.getAttribute('data-id');
+        const type = this.getAttribute('data-type');
+
+        fetch("{% url 'submit_feedback' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ question_id: qid, feedback_type: type })
+        }).then(r=>r.json()).then(data=>{
+            const helpful = document.getElementById('helpful-btn-' + qid);
+            const nothelpful = document.getElementById('nothelpful-btn-' + qid);
+            if (type === 'helpful') {
+                helpful.classList.add('active-helpful');
+                nothelpful.classList.remove('active-nothelpful');
+            } else {
+                nothelpful.classList.add('active-nothelpful');
+                helpful.classList.remove('active-helpful');
+            }
+        }).catch(()=>{});
+    });
+});
+
+/* text feedback save (unchanged) */
+function saveTextFeedback(questionId) {
+    const text = document.getElementById('feedback-text-' + questionId).value;
+    if (!text || text.trim() === '') return;
+    fetch("{% url 'submit_text_feedback' %}", {
+        method: "POST",
+        headers: { "X-CSRFToken": "{{ csrf_token }}", "Content-Type": "application/json" },
+        body: JSON.stringify({ question_id: questionId, feedback_text: text })
+    }).then(r=>r.json()).then(data=>{
+        if (data.success) {
+            document.getElementById('feedback-text-' + questionId).value = '';
+        }
+    }).catch(()=>{});
+}
+
+/* Summary panel numbers (ensure visible) */
+(function populateSummary() {
+    const total = questionCards.length;
+    const correct = questionCards.filter(q => q.dataset.correct === '1').length;
+    const wrong = total - correct;
+    document.getElementById('summary-total').textContent = total;
+    document.getElementById('summary-correct').textContent = correct;
+    document.getElementById('summary-wrong').textContent = wrong;
+
+})();
+
+/* keyboard navigation for accessibility */
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') nextBtn.click();
+    if (e.key === 'ArrowUp') prevBtn.click();
+});
+
+/* auto-highlight first sidebar item */
+if (sidebarButtons.length > 0) { sidebarButtons[0].classList.add('active'); }
+</script>
+
+{% endblock %}

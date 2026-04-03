@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Avg, Count
+import json
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -60,8 +62,47 @@ class UserQuizAttempt(models.Model):
     score_percentage = models.FloatField(default=0)
     completed = models.BooleanField(default=False)
 
+class UserActivity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    activity_type = models.CharField(max_length=50)  # e.g. "Quiz Completed"
+    description = models.TextField()                 # e.g. "Retook science quiz"
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.activity_type} @ {self.timestamp}"
+    
+      
+
 class UserAnswer(models.Model):
     attempt = models.ForeignKey(UserQuizAttempt, on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey(AIQuestion, on_delete=models.CASCADE)
     user_answer = models.CharField(max_length=255)
     is_correct = models.BooleanField(default=False)
+
+    # 🧠 AI Explanation & Feedback
+    explanation = models.TextField(blank=True)
+    helpful_feedback = models.BooleanField(null=True)
+    reference_link = models.URLField(blank=True, null=True)
+    learning_source = models.CharField(max_length=224, blank=True, null=True)
+
+class QuestionFeedback(models.Model):
+    FEEDBACK_CHOICES = [
+        ('helpful', 'Helpful'),
+        ('not_helpful', 'Not Helpful'),
+        ('text', 'Text Feedback'),
+    ]
+    
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='question_feedbacks')
+    # ✅ Use AIQuestion instead of QuizQuestion (or use Question if that's what you prefer)
+    question = models.ForeignKey('AIQuestion', on_delete=models.CASCADE, related_name='feedbacks')
+    feedback_type = models.CharField(max_length=20, choices=FEEDBACK_CHOICES)
+    feedback_text = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name_plural = "Question Feedbacks"
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - Question {self.question.id} - {self.feedback_type}"

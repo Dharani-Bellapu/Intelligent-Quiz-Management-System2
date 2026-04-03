@@ -1,7 +1,51 @@
+/* CSS Variables for Themes */
+:root {
+  --bg-gradient-start: #ffffff;
+  --bg-gradient-middle: #f0f0f0;
+  --bg-gradient-end: #e0e0e0;
+  --text-color: #333333;
+  --primary-color: #00FF88;
+  --secondary-color: #00C9FF;
+  --card-bg: #ffffff;
+  --card-border: #cccccc;
+  --navbar-bg: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
+  --alert-success-bg: linear-gradient(90deg, #00FF88, #00C9FF);
+  --alert-error-bg: linear-gradient(90deg, #ff5e62, #ff9966);
+}
+
+body[data-theme="dark"] {
+  --bg-gradient-start: #0a0a0a;
+  --bg-gradient-middle: #1a1a1a;
+  --bg-gradient-end: #0a0a0a;
+  --text-color: #ffffff;
+  --primary-color: #00C9FF;
+  --secondary-color: #6C63FF;
+  --card-bg: #1a1a1a;
+  --card-border: #333333;
+  --navbar-bg: linear-gradient(90deg, #1a1a1a 0%, #2a2a2a 100%);
+  --alert-success-bg: linear-gradient(90deg, #00C9FF, #6C63FF);
+  --alert-error-bg: linear-gradient(90deg, #ff5e62, #ff9966);
+}
+
+body[data-theme="light"] {
+  --bg-gradient-start: #ffffff;
+  --bg-gradient-middle: #f0f0f0;
+  --bg-gradient-end: #e0e0e0;
+  --text-color: #333333;
+  --primary-color: #00FF88;
+  --secondary-color: #00C9FF;
+  --card-bg: #ffffff;
+  --card-border: #cccccc;
+  --navbar-bg: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
+  --alert-success-bg: linear-gradient(90deg, #00FF88, #00C9FF);
+  --alert-error-bg: linear-gradient(90deg, #ff5e62, #ff9966);
+}
+
 body {
-    background: linear-gradient(135deg, #1a1f36 0%, #2d3250 50%, #111628 100%) !important;
-    color: #f5f5f5;
+    background: var(--bg-gradient-start) !important;
+    color: var(--text-color);
     font-family: "Segoe UI", Arial, sans-serif;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .hero-section {
@@ -11,13 +55,13 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: radial-gradient(circle at center, rgba(108,99,255,0.08), transparent 70%);
+    background: radial-gradient(circle at center, rgba(0, 255, 136, 0.08), transparent 70%);
 }
 
 .hero-section h1 {
     font-size: 3rem;
     font-weight: 700;
-    background: linear-gradient(90deg, #6C63FF, #00C9FF);
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -28,7 +72,7 @@ body {
 
 .hero-section p {
     font-size: 1.2rem;
-    color: #cfcfcf;
+    color: var(--text-color);
     max-width: 600px;
 }
 
@@ -47,52 +91,52 @@ body {
 }
 
 .feature-card {
-    background-color: #20263a;
-    border: 1px solid #30364a;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 15px;
     padding: 25px;
     text-align: center;
-    color: #fff;
+    color: var(--text-color);
     transition: all 0.3s ease;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
-    background-color: #262d45;
+    background-color: var(--card-bg);
     box-shadow: 0 0 20px rgba(108, 99, 255, 0.4);
 }
 
 .feature-icon {
     font-size: 40px;
-    color: #6C63FF;
+    color: var(--primary-color);
     margin-bottom: 15px;
 }
 
 .navbar, .footer {
-    background: linear-gradient(90deg, #23263a 0%, #323657 100%);
-    color: #fff;
+    background: var(--navbar-bg);
+    color: var(--text-color);
 }
 
 .navbar-brand, .footer a, .footer {
-    color: #6C63FF !important;
+    color: var(--primary-color) !important;
     font-weight: 600;
-    text-shadow: 0 0 8px #6C63FF55;
+    text-shadow: 0 0 8px rgba(108, 99, 255, 0.4);
 }
 
 .btn-primary {
-    background: linear-gradient(90deg, #6C63FF, #00C9FF);
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
     border: none;
     color: #fff;
 }
 
 .btn-outline-light {
-    border-color: #6C63FF;
-    color: #6C63FF;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 .btn-outline-light:hover {
-    background: #6C63FF;
+    background: var(--primary-color);
     color: #fff;
 }
 .hero-section {
@@ -116,35 +160,35 @@ body {
     }
 }
 .form-control {
-    background: #23263a !important;
-    color: #f5f5f5;
-    border: 1.5px solid #30364a !important;
+    background: var(--card-bg) !important;
+    color: var(--text-color);
+    border: 1.5px solid var(--card-border) !important;
     border-radius: 8px;
     transition: box-shadow 0.2s, border-color 0.2s;
-    box-shadow: 0 0 0px #6c63ff60;
+    box-shadow: 0 0 0px rgba(108, 99, 255, 0.4);
 }
 
 .form-control:focus {
-    color: #fff;
-    background: #23263a;
-    border-color: #6C63FF !important;
-    box-shadow: 0 0 8px #6C63FF80;
+    color: var(--text-color);
+    background: var(--card-bg);
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 8px rgba(108, 99, 255, 0.5);
 }
 
 .form-label {
-    color: #dbeafe;
+    color: var(--text-color);
     font-weight: 500;
     padding-left: 2px;
-    text-shadow: 0 0 2px #23263a90;
+    text-shadow: 0 0 2px rgba(35, 38, 58, 0.6);
 }
 
 .form-check-label {
-    color: #fff !important;
+    color: var(--text-color) !important;
 }
 
 
 .card {
-    border: 1.5px solid #30364a;
+    border: 1.5px solid var(--card-border);
 }
 
 .form-control {
@@ -184,20 +228,25 @@ input[type="email"]:focus {
     color: #fff;
     background: #23263a;
 }
+/* Success Message - Glowing Blue Gradient */
 .alert-success {
-    background: linear-gradient(90deg, #6C63FF, #00C9FF);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
+    background: var(--alert-success-bg) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
     font-weight: 500;
+    box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3) !important;
 }
 
+/* Error Message - Red Gradient */
 .alert-error, .alert-danger {
-    background: linear-gradient(90deg, #ff5e62, #ff9966);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
+    background: var(--alert-error-bg) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
     font-weight: 500;
+    box-shadow: 0 4px 15px rgba(255, 94, 98, 0.3) !important;
+}
 }
 .btn-close {
     filter: brightness(0) invert(1); /* Makes close button white */

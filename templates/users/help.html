@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Help & Support{% endblock %}
+{% block content %}
+<style>
+.help-container {
+  width: 96vw;
+  max-width: 960px;
+  min-width: 320px;
+  margin: 5vh auto 0 auto;
+  background: linear-gradient(110deg, #26365d 70%, #2b4269 100%);
+  border-radius: 18px;
+  box-shadow: 0 8px 28px #23276a23;
+  padding: 2.7rem 4vw 2.5rem 4vw;
+}
+@media (max-width: 1200px) {
+  .help-container { max-width: 96vw; padding-left: 3vw; padding-right: 3vw; }
+}
+@media (max-width: 750px) {
+  .help-container { padding: 1.3rem 2vw 1.2rem 2vw; }
+}
+@media (max-width: 500px) {
+  .help-container { padding: 1rem 1vw 1rem 1vw; }
+  .help-container h1 { font-size: 1.43rem; }
+}
+.faq-list {
+  margin: 0 0 1.7rem 0;
+  padding-left: 0;
+  list-style: none;
+}
+.faq-list li {
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  margin-bottom: 13px;
+  padding: 13px 12px 11px 14px;
+  box-shadow: 0 2px 8px #203a5a14;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.faq-qicon {
+  font-size: 1.5rem;
+  color: #6C63FF;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.faq-text strong { color: #46A0FF; }
+.faq-text { color: #e2e2fc; font-size: .96rem;}
+.contact-bar {
+  background: #314878;
+  border-radius: 9px;
+  padding: 13px 9px;
+  margin: 35px 0 14px 0;
+  color: #def8ff;
+  font-size: 1.03rem;
+}
+.help-form label { color: #aecbfd; font-weight: 600; }
+.help-form input, .help-form textarea {
+  background: #21284a;
+  color: #f8faff;
+  border: 1px solid #4e6ac0;
+  border-radius: 7px;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+.help-form input:focus, .help-form textarea:focus { border-color: #84b8ff; background: #25305b; }
+.help-form .btn-primary {
+  background: linear-gradient(90deg,#46A0FF,#6C63FF);
+  border: none;
+  padding: 9px 24px;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px #46a0ff33;
+}
+.help-form .btn-primary:hover { filter: brightness(1.08);}
+</style>
+
+<div class="help-container">
+  <h1><i class="bi bi-life-preserver"></i> Help & Support</h1>
+  <p class="lead mb-3">Need assistance? Find answers to common questions below or contact us for support.</p>
+  
+  <h4 class="mt-4 mb-2"><i class="bi bi-question-circle"></i> Frequently Asked Questions</h4>
+  <ul class="faq-list">
+    <li>
+      <span class="faq-qicon"><i class="bi bi-lightbulb"></i></span>
+      <span class="faq-text">
+        <strong>How do I start a new quiz?</strong><br>
+        Go to <b>Categories</b>, pick your desired topic, and click <b>Start Quiz</b>.
+      </span>
+    </li>
+    <li>
+      <span class="faq-qicon"><i class="bi bi-clock-history"></i></span>
+      <span class="faq-text">
+        <strong>How do I check my quiz history?</strong><br>
+        Click <b>History</b> from your dashboard to see your past attempts.
+      </span>
+    </li>
+    <li>
+      <span class="faq-qicon"><i class="bi bi-chat-dots"></i></span>
+      <span class="faq-text">
+        <strong>How do I leave feedback?</strong><br>
+        After each quiz, look for the feedback form or "Helpful/Not Helpful" buttons under explanations.
+      </span>
+    </li>
+    <li>
+      <span class="faq-qicon"><i class="bi bi-key"></i></span>
+      <span class="faq-text">
+        <strong>What if I forgot my password?</strong><br>
+        Use the <b>Forgot password</b> option on the login page to reset it.
+      </span>
+    </li>
+  </ul>
+  
+  <h4 class="mt-4"><i class="bi bi-envelope"></i> Still need help?</h4>
+  <div class="contact-bar mb-3">
+    Email us at <a href="mailto:support@example.com" style="color:#a0e3fd;">support@example.com</a>
+    or fill out the quick contact form below.
+  </div>
+
+  <form method="post" action="#" class="help-form" style="max-width:440px;">
+    <div class="form-group mb-2">
+      <label for="help-email"><i class="bi bi-person"></i> Your email</label>
+      <input type="email" class="form-control" id="help-email" placeholder="name@example.com" required>
+    </div>
+    <div class="form-group mb-2">
+      <label for="help-message"><i class="bi bi-chat-text"></i> Your message</label>
+      <textarea class="form-control" id="help-message" rows="3" placeholder="How can we help you?" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mt-1">Send</button>
+  </form>
+</div>
+{% endblock %}

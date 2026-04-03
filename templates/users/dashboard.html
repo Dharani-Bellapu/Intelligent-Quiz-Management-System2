@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+{% block title %}Quiz Dashboard{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<div class="hero-section text-center mb-4" 
+     style="background: linear-gradient(108deg, #232445 60%, #2f599c 100%); 
+            padding: 1.1rem 0 0.6rem 0; color: #eee; border-radius: 18px;">
+    <div style="margin-bottom: 1rem;">
+        <span style="font-size: 2.5rem; color: #46A0FF;">
+            <i class="bi bi-bar-chart-fill"></i>
+        </span>
+    </div>
+    <h1 style="font-weight:800; font-size:2.4rem; letter-spacing:1px; margin-bottom:0.5rem;">
+        <span style="color:#46A0FF;">Quiz Performance Dashboard</span>
+    </h1>
+    <p style="font-size:1.16rem; margin-bottom:0.3rem;">
+        Get insights on your learning activity and progress 
+        <span class="badge" style="background:#42ffb614; color:#46A0FF;">Live</span>
+    </p>
+</div>
+
+<!-- SCORE CARDS SECTION -->
+<div class="container mb-4">
+    <div class="row g-4 justify-content-center">
+        <!-- Total Quizzes Card -->
+        <div class="col-md-4">
+            <div class="score-card text-center shadow-sm py-4 h-100">
+                <div class="score-icon mb-2"><i class="bi bi-bar-chart-fill"></i></div>
+                <div class="stat-title mb-1">Total Quizzes</div>
+                <div class="stat-value animated-number text-info" data-target="{{ total_quizzes }}">{{ total_quizzes }}</div>
+            </div>
+        </div>
+        <!-- Average Score Card -->
+        <div class="col-md-4">
+            <div class="score-card text-center shadow-sm py-4 h-100">
+                <div class="score-icon mb-2"><i class="bi bi-star-fill"></i></div>
+                <div class="stat-title mb-1">Average Score</div>
+                <div class="stat-value animated-number text-success" data-target="{{ avg_score|floatformat:2 }}">{{ avg_score|floatformat:2 }}%</div>
+            </div>
+        </div>
+        <!-- Total Time Spent Card -->
+        <div class="col-md-4">
+            <div class="score-card text-center shadow-sm py-4 h-100">
+                <div class="score-icon mb-2"><i class="bi bi-clock-history"></i></div>
+                <div class="stat-title mb-1">Total Time Spent</div>
+                <div class="stat-value animated-number text-warning" data-target="{{ total_time_str }}">{{ total_time_str }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CHARTS -->
+<div class="container mb-5">
+    <div class="card custom-card p-4 mb-4">
+        <h4 class="fw-bold text-light mb-3" style="color:#46A0FF;">
+            <i class="bi bi-graph-up"></i> Insights & Analytics
+        </h4>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <canvas id="pieCategories" height="210"></canvas>
+                <div class="text-center mt-2" style="font-size:0.97rem;color:#A8B8D8;">Category Distribution</div>
+            </div>
+            <div class="col-md-4">
+                <canvas id="scoreLineChart" height="210"></canvas>
+                <div class="text-center mt-2" style="font-size:0.97rem;color:#A8B8D8;">Score Progress (Weekly)</div>
+            </div>
+            <div class="col-md-4">
+                <canvas id="timeBarChart" height="210"></canvas>
+                <div class="text-center mt-2" style="font-size:0.97rem;color:#A8B8D8;">Time Spent Analytics</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-4">
+    <div class="row g-4">
+        <!-- Performance Summary (left column) -->
+        <div class="col-md-6">
+            <div class="card custom-card p-4 text-light h-100"
+                 style="background: linear-gradient(100deg,#22264a99 70%, #313659 100%);">
+                <h5 class="fw-bold mb-3" style="color:#46A0FF;">
+                    <i class="bi bi-flag-fill"></i> Performance Summary
+                </h5>
+                <div class="performance-box mt-3">
+
+    <!-- BEST PERFORMANCE -->
+    <div class="perf-item best-perf mb-3 p-3">
+        <div class="d-flex align-items-center">
+            <div class="perf-icon best">
+                <i class="bi bi-trophy-fill"></i>
+            </div>
+            <div class="ms-3">
+                <div class="perf-title">Best Performance</div>
+                {% if best_attempt %}
+                    <div class="perf-value text-success">
+                        {{ best_attempt.category }} – {{ best_attempt.score_percentage }}%
+                    </div>
+                {% else %}
+                    <div class="perf-value text-muted">No data yet</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- NEEDS IMPROVEMENT -->
+    <div class="perf-item need-perf p-3">
+        <div class="d-flex align-items-center">
+            <div class="perf-icon improve">
+                <i class="bi bi-lightning-charge-fill"></i>
+            </div>
+            <div class="ms-3">
+                <div class="perf-title">Needs Improvement</div>
+                {% if needs_improve %}
+                    <div class="perf-value text-danger">
+                        {{ needs_improve.category }}  {{ needs_improve.score_percentage }}%
+                    </div>
+                {% else %}
+                    <div class="perf-value text-muted">No data yet</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+            </div>
+        </div>
+        <!-- Recent Activity (right column) -->
+        <div class="col-md-6">
+            <div class="card custom-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="fw-bold mb-0" style="color:#46A0FF;">
+                        <i class="bi bi-clock-history"></i> Recent Activity
+                    </h5>
+                    <a href="{% url 'history' %}"
+                       class="btn btn-outline-info btn-sm"
+                       style="border-radius:12px; font-weight:600;">
+                        <i class="bi bi-clock-history"></i> My History
+                    </a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for activity in recent_activities %}
+                    <li class="list-group-item bg-transparent text-light"
+                        style="padding:0.5em 0; background:transparent!important; border-color:#3a3f5c;">
+                        <span class="badge rounded-pill"
+                            style="background:#46A0FF22; color:#42D1FF; font-weight:600;">
+                            {{ activity.activity_type }}
+                        </span>
+                        {{ activity.description }}
+                        <span class="text-muted float-end" style="font-size:0.9em;">
+                            {{ activity.timestamp|date:"M d, H:i" }}
+                        </span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item bg-transparent text-muted"
+                        style="background:transparent!important;">No recent activity.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+
+.performance-box {
+    margin-top: 10px;
+}
+
+.perf-item {
+    background: rgba(255,255,255,0.04);
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.perf-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(70,160,255,0.12);
+}
+
+.perf-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #232d56 60%, #2a78cc 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+    box-shadow: 0 2px 9px #1b418410;
+}
+
+.perf-icon i {
+    font-size: 1.9rem;
+    color: #46A0FF;
+    filter: drop-shadow(0 1px 2px #22234060);
+}
+
+
+.perf-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: .4px;
+    color: #A8B8D8;
+    margin-bottom: 2px;
+}
+
+.perf-value {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+.score-card {
+    background: linear-gradient(120deg, #22264a 60%, #28325a 100%);
+    border-radius: 14px;
+    color: #e9eefa;
+    transition: box-shadow .2s, transform .2s;
+}
+.score-card:hover {
+    box-shadow: 0 10px 24px #46a0ff24;
+    transform: translateY(-2px) scale(1.018);
+}
+.score-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5em auto;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #232d56 60%, #2a78cc 100%);
+    box-shadow: 0 2px 9px #1b418410;
+}
+
+.score-icon i {
+    font-size: 2.1rem;
+    color: #46A0FF;
+    filter: drop-shadow(0 1px 2px #22234060);
+    line-height: normal;
+    transition: color .2s;
+}
+.stat-title {
+    font-size: 1.04rem;
+    font-weight: 600;
+    color: #9eb4ff;
+}
+.stat-value {
+    font-size: 2.1rem;
+    font-weight: 800;
+    margin-top: .1em;
+    letter-spacing: 1px;
+}
+
+.animated-number {
+    transition: color 0.7s;
+}
+
+.custom-card {
+    background: linear-gradient(110deg, #212340 70%, #28325a 100%);
+    color: #fff;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 5px 25px rgba(50,90,200,0.11);
+    transition: transform .25s ease, box-shadow .25s;
+}
+.custom-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(50,90,200,0.18);
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    new Chart(document.getElementById('pieCategories'), {
+        type: 'pie',
+        data: {{ pie_data|default:"{}"|safe }},
+        options: {
+            plugins: { 
+                legend: { position:'bottom', labels:{color:'#ccc'} } 
+            }
+        }
+    });
+
+    new Chart(document.getElementById('scoreLineChart'), {
+        type: 'line',
+        data: {{ score_progress_data|default:"{}"|safe }},
+        options: {
+            scales: {
+                x:{ticks:{color:'#A8B8D8'}},
+                y:{beginAtZero:true,ticks:{color:'#42ffb6'}}
+            },
+            plugins:{legend:{display:false}}
+        }
+    });
+
+    new Chart(document.getElementById('timeBarChart'), {
+        type: 'bar',
+        data: {{ time_spent_data|default:"{}"|safe }},
+        options: {
+            scales: {
+                x:{ticks:{color:'#A8B8D8'}},
+                y:{beginAtZero:true,ticks:{color:'#FFD642'}}
+            },
+            plugins:{legend:{display:false}}
+        }
+    });
+});
+</script>
+{% endblock %}
